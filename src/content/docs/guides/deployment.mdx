@@ -1,0 +1,46 @@
+---
+title: Deployment
+description: Deploy Lumen to Vercel, Netlify, Cloudflare, or any static host.
+category: Guides
+order: 3
+---
+
+# Deployment
+
+Lumen produces a fully static, edge-friendly bundle. It runs anywhere modern
+hosting runs.
+
+## Build
+
+```bash
+bun run build
+```
+
+Output is written to `dist/` and includes pre-rendered HTML for every doc page,
+client-side JavaScript split per route, and a search index.
+
+## Vercel
+
+```bash
+vercel deploy
+```
+
+Vercel auto-detects Lumen via the `vite` framework signal. No additional
+configuration required.
+
+## Cloudflare Pages
+
+```bash
+bunx wrangler pages deploy dist
+```
+
+Lumen's bundle is fully compatible with Workers' edge runtime — no Node-specific
+APIs at runtime.
+
+## Self-hosting
+
+Any static file server works. Common choices:
+
+- **Caddy** — set the site root to `dist/` and Caddy handles compression and HTTPS.
+- **NGINX** — `try_files $uri $uri/ /index.html;` for SPA fallback.
+- **GitHub Pages** — `bunx gh-pages -d dist`.

@@ -1,0 +1,38 @@
+---
+title: Utilities
+description: Shared utilities exported from @lumen/core.
+category: API Reference
+order: 3
+---
+
+# Utilities
+
+A collection of small helpers used throughout the framework — and available to
+your own code.
+
+## `cn(...classes)`
+
+Conditionally joins class names. Filters falsy values and dedupes whitespace.
+
+```ts
+cn("base", isActive && "active", { hidden: !visible });
+```
+
+## `slugify(text)`
+
+Produces a URL-safe slug from arbitrary text.
+
+```ts
+slugify("Getting Started"); // "getting-started"
+```
+
+## `parseFrontmatter(source)`
+
+Parses a YAML frontmatter block from a Markdown or MDX source string.
+
+```ts
+const { data, content } = parseFrontmatter(source);
+```
+
+Returns an object with `data` (the parsed frontmatter object) and `content` (the
+remaining body).

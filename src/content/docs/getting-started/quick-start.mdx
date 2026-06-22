@@ -1,0 +1,54 @@
+---
+title: Quick Start
+description: Build your first documentation page in under five minutes.
+category: Getting Started
+order: 3
+---
+
+# Quick Start
+
+This guide walks through writing your first page, adding it to navigation, and
+publishing changes.
+
+## 1. Create a page
+
+Add a new MDX file inside `docs/`:
+
+```mdx
+---
+title: Hello World
+description: My first Lumen page.
+category: Guides
+order: 1
+---
+
+# Hello, world
+
+Welcome to my brand new docs page.
+```
+
+## 2. Configure navigation
+
+Lumen reads frontmatter automatically and groups pages by `category`. Pages
+within a category are ordered by the `order` field.
+
+## 3. Use components inside MDX
+
+You can import any React component into your `.mdx` files:
+
+```mdx
+import { Callout } from "@/components/callout";
+
+<Callout type="info">
+  Lumen supports any React component out of the box.
+</Callout>
+```
+
+## 4. Ship it
+
+```bash
+bun run build
+```
+
+Lumen produces a static, edge-friendly bundle ready to deploy to Vercel,
+Netlify, Cloudflare, or any static host.

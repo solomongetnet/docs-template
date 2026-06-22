@@ -1,0 +1,76 @@
+---
+title: Installation
+description: Set up Lumen in a new or existing project.
+category: Getting Started
+order: 2
+---
+
+# Installation
+
+Install the Lumen CLI and core package using your preferred package manager.
+
+## Requirements
+
+- Node.js 18.18 or later
+- A modern package manager: `npm`, `pnpm`, `bun`, or `yarn`
+
+## Install
+
+<CodeTabs title="Install">
+  <Tab label="bun">
+
+```bash
+bun add lumen-docs @lumen/core
+```
+
+  </Tab>
+  <Tab label="pnpm">
+
+```bash
+pnpm add lumen-docs @lumen/core
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install lumen-docs @lumen/core
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add lumen-docs @lumen/core
+```
+
+  </Tab>
+</CodeTabs>
+
+## Initialize
+
+Scaffold the configuration and a sample documentation tree:
+
+```bash
+bunx lumen init
+```
+
+This creates:
+
+```
+docs/
+  getting-started/
+    introduction.mdx
+  guides/
+  api/
+lumen.config.ts
+```
+
+## Run the dev server
+
+```bash
+bun run dev
+```
+
+Open `http://localhost:5173/docs` and you should see your new documentation site.
+Continue with the [Quick Start](/docs/getting-started/quick-start).

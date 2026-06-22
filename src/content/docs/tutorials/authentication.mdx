@@ -1,0 +1,57 @@
+---
+title: Adding authentication
+description: Gate documentation pages behind authentication.
+category: Tutorials
+order: 2
+---
+
+# Adding authentication
+
+Some teams ship public docs alongside private internal documentation. This
+tutorial walks through gating selected pages behind an authentication layer.
+
+## Mark pages as private
+
+Set `private: true` in frontmatter to mark a page as protected:
+
+```mdx
+---
+title: Internal Runbook
+private: true
+---
+```
+
+## Configure your auth provider
+
+Lumen ships first-class adapters for common identity providers:
+
+- **Clerk** — `@lumen/auth-clerk`
+- **Auth0** — `@lumen/auth-auth0`
+- **Supabase** — `@lumen/auth-supabase`
+
+Install the adapter for your provider:
+
+```bash
+bun add @lumen/auth-clerk
+```
+
+## Enable the middleware
+
+```ts
+import { defineConfig } from "lumen-docs";
+import { clerkAuth } from "@lumen/auth-clerk";
+
+export default defineConfig({
+  middleware: [
+    clerkAuth({
+      publishableKey: process.env.CLERK_PUBLISHABLE_KEY!,
+    }),
+  ],
+});
+```
+
+## What happens at runtime
+
+Visitors hitting a private page are redirected to a sign-in flow. Once signed
+in, they return to the original URL with a session cookie set. Public pages
+remain unauthenticated for fast, cacheable delivery.

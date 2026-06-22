@@ -1,0 +1,38 @@
+---
+title: Theming
+description: Customize colors, typography, and spacing with design tokens.
+category: Guides
+order: 2
+---
+
+# Theming
+
+Lumen ships with a refined default theme inspired by the best developer
+documentation sites. Every color, radius, and shadow is exposed as a CSS
+variable — override what you need, leave the rest.
+
+## Override design tokens
+
+Add a `:root` block to your stylesheet to override any token:
+
+```css
+:root {
+  --brand: oklch(0.65 0.2 30); /* warm coral accent */
+  --radius: 0.5rem;
+}
+
+.dark {
+  --brand: oklch(0.75 0.18 30);
+}
+```
+
+## Typography
+
+Lumen uses **Inter** for body copy and **JetBrains Mono** for code. Swap fonts
+by overriding `--font-sans` and `--font-mono`.
+
+## Dark mode
+
+Dark mode is class-based — toggle the `dark` class on `<html>`. The built-in
+`<ThemeToggle />` component handles persistence and respects
+`prefers-color-scheme` on first visit.

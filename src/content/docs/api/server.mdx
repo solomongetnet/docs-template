@@ -1,0 +1,44 @@
+---
+title: Server API
+description: Server-side helpers for rendering and indexing.
+category: API Reference
+order: 2
+---
+
+# Server API
+
+The server API powers SSR and the build-time content pipeline.
+
+## `renderPage(slug, options)`
+
+Renders a documentation page to an HTML string.
+
+```ts
+import { renderPage } from "@lumen/core/server";
+
+const html = await renderPage("getting-started/introduction", {
+  theme: "dark",
+});
+```
+
+## `buildIndex(options)`
+
+Generates the search index consumed by the client. Run as part of your build
+step:
+
+```ts
+import { buildIndex } from "@lumen/core/server";
+
+await buildIndex({
+  source: "./docs",
+  output: "./public/search-index.json",
+});
+```
+
+## Hooks
+
+Lumen exposes a small set of build-time hooks for advanced use cases:
+
+- `onPageCreate` — augment frontmatter or content
+- `onIndexBuild` — transform the search index
+- `onAssetEmit` — post-process emitted assets

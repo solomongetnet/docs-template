@@ -1,0 +1,52 @@
+---
+title: Building your first app
+description: A walkthrough of building a complete documentation site from scratch.
+category: Tutorials
+order: 1
+---
+
+# Building your first app
+
+In this tutorial we'll build a complete documentation site for an imaginary
+product called **Pulse** — a real-time monitoring service.
+
+## What we'll build
+
+- A landing page with a hero and feature grid
+- A documentation section with three categories
+- A search dialog triggered with `⌘K`
+- Light and dark themes
+
+## Step 1 — Scaffold
+
+```bash
+bun create lumen pulse-docs
+cd pulse-docs
+bun install
+bun run dev
+```
+
+## Step 2 — Replace placeholder content
+
+Open `docs/getting-started/introduction.mdx` and replace the placeholder copy
+with your own. Save the file — Lumen hot-reloads the page instantly.
+
+## Step 3 — Add a category
+
+Create a new directory under `docs/` for each category you want. Lumen reads
+the directory name and the `category` frontmatter field to build navigation.
+
+## Step 4 — Customize the brand
+
+Edit `lumen.config.ts` to set the site name, social links, and brand color.
+The change propagates everywhere: navbar, footer, meta tags, and the
+generated favicon.
+
+## Step 5 — Deploy
+
+```bash
+bun run build
+vercel deploy
+```
+
+That's it. You now have a production-ready documentation site.

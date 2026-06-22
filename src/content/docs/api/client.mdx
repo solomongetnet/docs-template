@@ -1,0 +1,55 @@
+---
+title: Client API
+description: Programmatic access to Lumen from the browser.
+category: API Reference
+order: 1
+---
+
+# Client API
+
+The client API is exposed via the `@lumen/core` package and mirrors the data
+available to Lumen at runtime.
+
+## `createClient(options)`
+
+Creates a new Lumen client instance.
+
+```ts
+import { createClient } from "@lumen/core";
+
+const client = createClient({
+  baseUrl: "/docs",
+});
+```
+
+### Parameters
+
+| Parameter   | Type      | Description                              |
+| ----------- | --------- | ---------------------------------------- |
+| `baseUrl`   | `string`  | URL prefix where docs are served.        |
+| `locale`    | `string?` | Optional locale tag for i18n routing.    |
+
+### Returns
+
+A `LumenClient` instance with `search`, `getPage`, and `listPages` methods.
+
+## `client.search(query)`
+
+Performs a fuzzy search across the page index.
+
+```ts
+const results = await client.search("authentication");
+```
+
+Returns an array of `SearchResult` objects, each with `title`, `description`,
+`url`, and a relevance `score` between 0 and 1.
+
+## `client.getPage(slug)`
+
+Resolves a page by its slug.
+
+```ts
+const page = await client.getPage("getting-started/introduction");
+```
+
+Returns `null` when the page does not exist.

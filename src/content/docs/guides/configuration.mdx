@@ -1,0 +1,42 @@
+---
+title: Configuration
+description: Configure Lumen with the lumen.config.ts file.
+category: Guides
+order: 1
+---
+
+# Configuration
+
+Lumen is configured through a single `lumen.config.ts` file at the root of your
+project. Every option is optional — sensible defaults are provided.
+
+## The config file
+
+```ts
+import { defineConfig } from "lumen-docs";
+
+export default defineConfig({
+  name: "Acme Docs",
+  description: "Documentation for the Acme platform",
+  baseUrl: "/docs",
+  social: {
+    github: "https://github.com/acme/acme",
+    twitter: "https://twitter.com/acme",
+  },
+});
+```
+
+## Options reference
+
+| Option        | Type                | Description                                       |
+| ------------- | ------------------- | ------------------------------------------------- |
+| `name`        | `string`            | Site name shown in the navbar and meta tags.      |
+| `description` | `string`            | Default description for SEO.                      |
+| `baseUrl`     | `string`            | URL prefix where docs are served. Defaults `/docs`. |
+| `social`      | `Record<string, string>` | Social profile links rendered in the footer. |
+| `theme`       | `ThemeConfig`       | Override design tokens. See [Theming](/docs/guides/theming). |
+
+## Environment variables
+
+Reference `import.meta.env.VITE_*` values inside MDX or React components. Lumen
+inlines them at build time.
