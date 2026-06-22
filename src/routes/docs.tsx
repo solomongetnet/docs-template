@@ -37,7 +37,6 @@ function SidebarShell({
         </button>
       </div>
 
-
       <div className="px-3 pb-2">
         <button
           type="button"
@@ -107,34 +106,29 @@ function DocsLayout() {
         </button>
       </header>
 
-      <div
-        className={
-          sidebarOpen
-            ? "lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-4"
-            : "lg:grid lg:grid-cols-[0_minmax(0,1fr)]"
-        }
-      >
-        <aside
-          className={
-            "sticky top-0 hidden h-dvh border-r border-border transition-[width,opacity] duration-300 lg:block " +
-            (sidebarOpen ? "w-60 opacity-100" : "w-0 overflow-hidden opacity-0")
-          }
-          aria-label="Documentation navigation"
-        >
-          <SidebarShell
-            onSearchOpen={() => setSearchOpen(true)}
-            onToggle={() => setSidebarOpen(false)}
-          />
-        </aside>
 
-        <main id="main" className="relative min-w-0">
-          {!sidebarOpen && (
-            <div className="sticky top-0 z-20 hidden h-12 items-center gap-2 border-b border-border/60 bg-background/85 px-3 backdrop-blur-xl lg:flex">
+      <div className="lg:grid lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] lg:gap-4"
+        style={{ "--sidebar-w": sidebarOpen ? "15rem" : "3rem" } as React.CSSProperties}
+      >
+        {/* Full sidebar — always in the grid, shrinks to mini-width when closed */}
+        <aside
+          className="sticky top-0 hidden h-dvh border-r border-border lg:block"
+          aria-label="Documentation navigation"
+          style={{ width: sidebarOpen ? "15rem" : "3rem", transition: "width 300ms ease" }}
+        >
+          {sidebarOpen ? (
+            <SidebarShell
+              onSearchOpen={() => setSearchOpen(true)}
+              onToggle={() => setSidebarOpen(false)}
+            />
+          ) : (
+            /* Mini sidebar content */
+            <div className="flex flex-col items-center gap-3 pt-3">
               <button
                 type="button"
                 onClick={() => setSidebarOpen(true)}
                 aria-label="Expand sidebar"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <PanelLeft className="h-4 w-4 rotate-180" aria-hidden />
               </button>
@@ -142,20 +136,22 @@ function DocsLayout() {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Open search"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <Search className="h-4 w-4" aria-hidden />
               </button>
             </div>
           )}
+        </aside>
+
+        <main id="main" className="relative min-w-0">
           <div className="w-full max-w-7xl">
             <Outlet />
           </div>
         </main>
-
       </div>
 
-
+      {/* Mobile drawer */}
       {mobileNavOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
           <button

@@ -279,22 +279,7 @@
   color: var(--foreground);
   z-index: 1;
 }
-.docs-prose h2::after {
-  content: "";
-  position: absolute;
-  left: 1rem;
-  top: calc(50% + 1rem);
-  height: 100vh;
-  width: 1px;
-  background: var(--border);
-  z-index: 0;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-          mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-}
-.docs-prose > h2:last-of-type::after {
-  display: none;
-}
+
 .docs-prose h3 {
   font-size: 1.05rem;
   font-weight: 600;
@@ -431,13 +416,66 @@
 }
 
 
+/* ── Colorful blockquotes ─────────────────────────────────────────────────── */
 .docs-prose blockquote {
-  border-left: 2px solid var(--border);
-  padding: 0.25rem 1rem;
-  margin: 1rem 0;
-  color: var(--muted-foreground);
+  position: relative;
+  border-left: 3px solid oklch(0.6 0.18 260);
+  background: oklch(0.6 0.18 260 / 0.07);
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: 0 0.4rem 0.4rem 0;
+  color: var(--foreground);
+}
+.dark .docs-prose blockquote {
+  background: oklch(0.6 0.18 260 / 0.1);
 }
 .docs-prose blockquote p { margin: 0.25rem 0; }
+
+/* NOTE — blue */
+.docs-prose blockquote:has(> p:first-child > strong:first-child:-khtml-any-link),
+.docs-prose blockquote[data-type="note"] {
+  border-left-color: oklch(0.6 0.2 230);
+  background: oklch(0.6 0.2 230 / 0.07);
+}
+
+/* TIP — green */
+.docs-prose blockquote[data-type="tip"] {
+  border-left-color: oklch(0.65 0.18 145);
+  background: oklch(0.65 0.18 145 / 0.07);
+}
+
+/* WARNING — amber */
+.docs-prose blockquote[data-type="warning"] {
+  border-left-color: oklch(0.72 0.18 75);
+  background: oklch(0.72 0.18 75 / 0.07);
+}
+
+/* CAUTION / DANGER — red */
+.docs-prose blockquote[data-type="caution"],
+.docs-prose blockquote[data-type="danger"] {
+  border-left-color: oklch(0.6 0.22 25);
+  background: oklch(0.6 0.22 25 / 0.07);
+}
+
+/* IMPORTANT — purple */
+.docs-prose blockquote[data-type="important"] {
+  border-left-color: oklch(0.6 0.2 310);
+  background: oklch(0.6 0.2 310 / 0.07);
+}
+
+/* Inline label styling — bold first word inherits accent color */
+.docs-prose blockquote > p:first-child > strong:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.75;
+  margin-bottom: 0.15rem;
+}
 .docs-prose table {
   width: 100%;
   border-collapse: collapse;

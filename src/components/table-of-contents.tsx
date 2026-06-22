@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 
 type Heading = { id: string; text: string; level: number };
 
+const SCROLL_OFFSET = 100; // px from top to consider a heading "active"
+
 export function TableOfContents({
   contentRef,
   slug,
@@ -13,36 +15,23 @@ export function TableOfContents({
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const listRef = useRef<HTMLUListElement>(null);
+  const headingEls = useRef<HTMLHeadingElement[]>([]);
   const [indicator, setIndicator] = useState<{ top: number; height: number; opacity: number }>({
     top: 0,
     height: 0,
     opacity: 0,
   });
 
-  // Re-scan headings whenever the page (slug) changes.
+  // Scan headings whenever slug changes
   useEffect(() => {
     const node = contentRef.current;
     if (!node) return;
-
-    let observed: HTMLHeadingElement[] = [];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible) setActiveId(visible.target.id);
-      },
-      { rootMargin: "-80px 0px -70% 0px", threshold: 0 },
-    );
 
     const scan = () => {
       const found = Array.from(node.querySelectorAll("h2, h3")).filter(
         (el): el is HTMLHeadingElement => el instanceof HTMLHeadingElement && !!el.id,
       );
-      const ids = found.map((f) => f.id).join("|");
-      const prevIds = observed.map((f) => f.id).join("|");
-      if (ids === prevIds) return;
+      headingEls.current = found;
       setHeadings(
         found.map((el) => ({
           id: el.id,
@@ -51,22 +40,51 @@ export function TableOfContents({
         })),
       );
       if (found.length > 0) setActiveId(found[0].id);
-      observed.forEach((el) => observer.unobserve(el));
-      found.forEach((el) => observer.observe(el));
-      observed = found;
     };
 
     scan();
 
-    const mo = new MutationObserver(() => scan());
+    const mo = new MutationObserver(scan);
     mo.observe(node, { childList: true, subtree: true });
-
-    return () => {
-      observer.disconnect();
-      mo.disconnect();
-    };
+    return () => mo.disconnect();
   }, [contentRef, slug]);
 
+  // Scroll listener — pick the last heading that has scrolled past SCROLL_OFFSET
+  useEffect(() => {
+    const onScroll = () => {
+      const els = headingEls.current;
+      if (els.length === 0) return;
+
+      const scrollY = window.scrollY;
+      const windowH = window.innerHeight;
+      const docH = document.documentElement.scrollHeight;
+      const atBottom = scrollY + windowH >= docH - 4;
+
+      // If at the very bottom, activate last heading
+      if (atBottom) {
+        setActiveId(els[els.length - 1].id);
+        return;
+      }
+
+      // Find the last heading whose top is above SCROLL_OFFSET
+      let active = els[0];
+      for (const el of els) {
+        const top = el.getBoundingClientRect().top;
+        if (top <= SCROLL_OFFSET) {
+          active = el;
+        } else {
+          break;
+        }
+      }
+      setActiveId(active.id);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll(); // run once on mount
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [headings]); // re-attach when headings list changes
+
+  // Move the indicator bar to the active list item
   useLayoutEffect(() => {
     const list = listRef.current;
     if (!list || !activeId) {
@@ -82,37 +100,31 @@ export function TableOfContents({
 
   return (
     <div className="text-sm">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-foreground">On this page</p>
+      <p className="mb-3 text-xs font-medium text-muted-foreground">On this page</p>
       <div className="relative">
-        <span aria-hidden className="absolute left-[7px] top-0 h-full w-px bg-border/40" />
+        {/* Static track */}
+        <span aria-hidden className="absolute left-0 top-0 h-full w-px bg-border" />
+        {/* Sliding active indicator */}
         <span
           aria-hidden
-          className="absolute left-[5px] top-0 w-[5px] rounded-full bg-foreground will-change-[top,opacity]"
+          className="absolute left-0 w-px bg-foreground will-change-[top,height,opacity]"
           style={{
-            top: indicator.top + indicator.height / 2 - 10,
-            height: 20,
+            top: indicator.top,
+            height: indicator.height,
             opacity: indicator.opacity,
-            boxShadow: "0 0 10px var(--foreground), 0 0 18px var(--foreground)",
             transition:
-              "top 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease-out",
+              "top 280ms cubic-bezier(0.22, 1, 0.36, 1), height 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease",
           }}
         />
         <ul ref={listRef} className="relative flex flex-col">
           {headings.map((h) => (
-            <li
-              key={h.id}
-              data-toc-id={h.id}
-              style={{ paddingLeft: h.level === 3 ? "1.75rem" : "1rem" }}
-              className={cn(
-                "rounded-lg transition-colors duration-200",
-                activeId === h.id ? "bg-accent/60" : "bg-transparent",
-              )}
-            >
+            <li key={h.id} data-toc-id={h.id}>
               <a
                 href={`#${h.id}`}
                 onClick={() => setActiveId(h.id)}
                 className={cn(
                   "block py-1.5 text-[13px] transition-colors duration-200",
+                  h.level === 3 ? "pl-6" : "pl-4",
                   activeId === h.id
                     ? "font-medium text-foreground"
                     : "text-muted-foreground hover:text-foreground",

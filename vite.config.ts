@@ -7,6 +7,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
 import { rehypeBashTheme } from "./src/lib/rehype-bash-theme";
+import { rehypeBlockquoteAlerts } from "./src/lib/rehype-blockquote-alerts";
 
 export default defineConfig({
   tanstackStart: {
@@ -26,6 +27,7 @@ export default defineConfig({
           [rehypeAutolinkHeadings, { behavior: "append", properties: { className: ["heading-anchor"], ariaLabel: "Link to section" } }],
           [rehypeHighlight, { detect: true, subset: ["bash", "shell", "javascript", "typescript", "tsx", "jsx", "json", "css", "html", "xml", "yaml", "markdown", "python"] }],
           rehypeBashTheme,
+          rehypeBlockquoteAlerts,
         ],
       }),
     },

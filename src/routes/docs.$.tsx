@@ -69,11 +69,11 @@ function DocPage() {
   const { prev, next } = getAdjacentDocs(page.slug);
 
   return (
-    <div className="grid min-w-0 gap-6 px-4 py-4 xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-20 xl:py-6">
+    <div className="grid min-w-0 gap-6 px-4 py-4 xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-12 xl:px-2 xl:py-4">
       <MobileToc contentRef={articleRef} slug={page.slug} />
       <article
         ref={articleRef}
-        className="min-w-0 max-w-4xl sm:rounded-2xl sm:border sm:border-border sm:bg-card/40 sm:px-8 sm:py-10"
+        className="min-w-0 max-w-6xl sm:rounded-md sm:border sm:border-border sm:bg-card/40 sm:px-8 sm:py-10"
       >
         <div className="hidden sm:block">
           <Breadcrumbs
